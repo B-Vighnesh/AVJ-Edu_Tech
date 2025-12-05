@@ -14,9 +14,23 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class OtpService {
+    private final Map<String, Boolean> verifiedMap = new ConcurrentHashMap<>();
+    public boolean isOtpVerified(String email, String purpose) {
+        return verifiedMap.getOrDefault(email + "-" + purpose, false);
+    }
+
+    public void markOtpVerified(String email, String purpose) {
+        verifiedMap.put(email + "-" + purpose, true);
+    }
+
+    public void clearOtpVerification(String email, String purpose) {
+        verifiedMap.remove(email + "-" + purpose);
+    }
+
 
     static class OtpData{
         String otp;
@@ -34,7 +48,7 @@ public class OtpService {
 
     }
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
     private final Map<String,OtpData> OtpStore =new HashMap<>();
 
     @Autowired

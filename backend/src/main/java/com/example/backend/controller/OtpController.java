@@ -42,9 +42,12 @@ public class OtpController {
     public ResponseEntity<OtpResponse> verifyOtp(@RequestBody OtpRequest req){
         boolean isvalid = otpService.verifyOtp(req.getEmail(),req.getOtp());
         if(!isvalid){
+
             return ResponseEntity.badRequest().body(new OtpResponse(false, "Invalid Or Expired Otp"));
         }
-        else
-            return ResponseEntity.ok(new OtpResponse(true,"Otp Verified Successfully"));
+        else {
+            otpService.markOtpVerified(req.getEmail(), req.getPurpose());
+            return ResponseEntity.ok(new OtpResponse(true, "Otp Verified Successfully"));
+        }
     }
 }

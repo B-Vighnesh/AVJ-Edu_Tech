@@ -21,6 +21,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    @Autowired
+    private OtpService otpService;
+
 
     @Autowired
     public AuthService(UserRepository userRepository, UserRepository userRepository1, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService)
@@ -36,6 +39,9 @@ public class AuthService {
         if(userRepository.existsByEmail(registerRequest.getEmail()))
         {
             return new AuthResponse(false,"Email already exists",null,null,null);
+        }
+        if (!otpService.isOtpVerified(registerRequest.getEmail(), "REGISTER")) {
+            return new AuthResponse(false, "OTP not verified", null,null,null);
         }
 
         User user=new User();
