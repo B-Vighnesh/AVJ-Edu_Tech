@@ -57,7 +57,7 @@ public class OtpService {
         if(OtpStore.containsKey(email)){
             OtpData data =OtpStore.get(email);
             if(data.lastSentAt.plusMinutes(3).isAfter(LocalDateTime.now())){
-                throw new RuntimeException("Please wait 3 minutes before requesting another OTP.");
+                return new OtpResponse(false,"Please wait 3 minutes before requesting another OTP.");
             }
         }
 
@@ -152,7 +152,7 @@ public class OtpService {
         }
         if (!data.otp.equals(otp)) {
             data.attempts++;
-                    return true;
+                    return false;
                 }
         OtpStore.remove(email);
         return true;
