@@ -28,6 +28,7 @@ public class AuthService {
         {
             return new AuthResponse(false,"Email already exists",null,null,null);
         }
+
         User user=new User();
         user.setFullName(registerRequest.getFullName());
         user.setEmail(registerRequest.getEmail());
@@ -65,7 +66,5 @@ public class AuthService {
                 user.getId(),
                 user.getRole().name()
         );
-
-
     }
 }

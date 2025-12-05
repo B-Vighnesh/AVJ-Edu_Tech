@@ -1,0 +1,12 @@
+package com.example.backend.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class OtpResponse {
+
+    private boolean success;
+    private String message;
+}
