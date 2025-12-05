@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.DTO.AuthResponse;
 import com.example.backend.DTO.LoginRequest;
 import com.example.backend.DTO.RegisterRequest;
+import com.example.backend.DTO.ResetPasswordRequest;
 import com.example.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,5 +48,13 @@ public class AuthController {
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(authResponse);
         }
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<AuthResponse> resetPassword (@RequestBody ResetPasswordRequest resetPasswordRequest){
+        AuthResponse authResponse=authService.resetPassword(resetPasswordRequest.getEmail(), resetPasswordRequest.getNewPassword());
+        if(authResponse.isSuccess())
+            return ResponseEntity.ok(authResponse);
+        else
+            return ResponseEntity.badRequest().body(authResponse);
     }
 }

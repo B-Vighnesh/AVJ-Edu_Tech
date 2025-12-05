@@ -57,6 +57,7 @@ public class AuthService {
                 )
         );
         String token = jwtService.generateToken(user.getEmail());
+        otpService.clearOtpVerification(registerRequest.getEmail(), "REGISTER");
 
         return new AuthResponse(true,"Registartion Succcess",token,saved.getId(),saved.getRole().name());
     }
@@ -95,5 +96,17 @@ public class AuthService {
                 user.getId(),
                 user.getRole().name()
         );
+    }
+    public AuthResponse resetPassword(String email,String newPassword){
+        if(!otpService.isOtpVerified(email,"FORGOT_PASSWORD")){
+            return new AuthResponse(false,"Otp Not Verified",null,null,null);
+        }
+        User user =userRepository.findByEmail(email).orElse(null);
+        if(user==null)
+            return new AuthResponse(false,"User Not found",null,null,null);
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        otpService.clearOtpVerification(email,"FORGOT_PASSWORD");
+        return new AuthResponse(true,"Password Reset Successfully",null,null,null);
     }
 }
