@@ -14,4 +14,10 @@ public class AuthResponse {
     private String token;
     private Long userId;
     private String role;
+
+    public AuthResponse(boolean b, String loginSuccess, String jwt) {
+        this.success=b;
+        this.message=loginSuccess;
+        this.token=jwt;
+    }
 }
