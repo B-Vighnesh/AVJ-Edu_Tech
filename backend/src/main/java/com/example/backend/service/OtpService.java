@@ -41,7 +41,7 @@ public class OtpService {
             this.otp=otp;
             this.expireAt=expireAt;
             this.lastSentAt=lastSentAt;
-            this.attempts=attempts;
+            this.attempts=0;
 
         }
 
@@ -49,7 +49,7 @@ public class OtpService {
     }
 
     private final JavaMailSender mailSender;
-    private final Map<String,OtpData> OtpStore =new HashMap<>();
+    private final Map<String,OtpData> OtpStore =new ConcurrentHashMap<>();
 
     @Autowired
     public OtpService(JavaMailSender mailSender){
