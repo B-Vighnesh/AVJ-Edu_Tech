@@ -16,8 +16,7 @@ public class UserProfileController {
 
     private final UserProfileService userProfileService;
 
-    @GetMapping
-    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getProfile() {
 
         // Extract userId from JWT subject

@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -39,30 +38,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7);
+        try {
+            String token = authHeader.substring(7);
+            Long userId = jwtService.extractUserId(token);
 
-        Long userId = jwtService.extractUserId(token);
+            // If user NOT authenticated yet
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        // If user NOT authenticated yet
-        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Load user by ID (your UserDetailsServiceImpl supports this)
+                UserDetails user = userDetailsService.loadUserByUsername(String.valueOf(userId));
 
-            // Load user by ID (your UserDetailsServiceImpl supports this)
-            UserDetails user = userDetailsService.loadUserByUsername(String.valueOf(userId));
+                // Validate token
+                if (jwtService.isTokenValid(token, userId)) {
 
-            // Validate token
-            if (jwtService.isTokenValid(token, userId)) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    user, null, user.getAuthorities()
+                            );
 
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                user, null, user.getAuthorities()
-                        );
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
 
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Authentication Failed\", \"message\": \"" + e.getMessage() + "\"}");
+            return;
         }
 
         filterChain.doFilter(request, response);

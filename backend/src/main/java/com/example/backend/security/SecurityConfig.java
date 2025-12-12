@@ -1,8 +1,10 @@
 package com.example.backend.security;
 
 import com.example.backend.jwt.JwtAuthenticationFilter;
+import com.example.backend.jwt.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,14 +26,29 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        return new JwtAuthenticationFilter(jwtService, userDetailsService);
+    }
+
+    @Bean
+    public org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthenticationFilter> jwtFilterRegistration(JwtAuthenticationFilter filter) {
+        org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthenticationFilter> registration = new org.springframework.boot.web.servlet.FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             AuthenticationProvider authenticationProvider,
-            JwtAuthenticationFilter jwtAuthFilter  // <-- Spring injects @Component bean
+            JwtAuthenticationFilter jwtAuthFilter
     ) throws Exception {
 
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .securityContext(context -> context
+                        .requireExplicitSave(false)
+                )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
