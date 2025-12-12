@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class OtpService {
     private final Map<String, Boolean> verifiedMap = new ConcurrentHashMap<>();
+
     public boolean isOtpVerified(String email, String purpose) {
         return verifiedMap.getOrDefault(email + "-" + purpose, false);
     }
@@ -31,6 +32,10 @@ public class OtpService {
         verifiedMap.remove(email + "-" + purpose);
     }
 
+    private boolean isValidPurpose(String purpose) {
+        return purpose.equalsIgnoreCase("REGISTER")
+                || purpose.equalsIgnoreCase("FORGOT_PASSWORD");
+    }
 
     static class OtpData{
         String otp;
@@ -60,7 +65,11 @@ public class OtpService {
 
     public OtpResponse sendOtp(String email, String purpose){
 
+        String key = email + "-" + purpose;
         boolean exists = userRepository.existsByEmail(email);
+        if(!isValidPurpose(purpose)){
+            return new OtpResponse(false,"Invalid purpose");
+        }
         if (purpose.equalsIgnoreCase("REGISTER") && exists) {
             return new OtpResponse(false,"Email Already Exists");
         }
@@ -68,8 +77,8 @@ public class OtpService {
             return new OtpResponse(false,"User Not Found");
         }
 
-        if(OtpStore.containsKey(email)){
-            OtpData data =OtpStore.get(email);
+        if(OtpStore.containsKey(key)){
+            OtpData data =OtpStore.get(key);
             if(data.lastSentAt.plusMinutes(3).isAfter(LocalDateTime.now())){
                 return new OtpResponse(false,"Please wait 3 minutes before requesting another OTP.");
             }
@@ -80,7 +89,7 @@ public class OtpService {
         LocalDateTime expiry =LocalDateTime.now().plusMinutes(5);
         LocalDateTime now =LocalDateTime.now();
 
-        OtpStore.put(email,new OtpData(otp,expiry,now));
+        OtpStore.put(key,new OtpData(otp,expiry,now));
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -110,12 +119,16 @@ public class OtpService {
 
 
     public OtpResponse resendOtp(String email,String purpose){
+        String key = email + "-" + purpose;
+        if(!isValidPurpose(purpose)){
+            return new OtpResponse(false,"Invalid purpose");
+        }
 
-        if(!OtpStore.containsKey(email)){
-            sendOtp(email,purpose);
+        if(!OtpStore.containsKey(key)){
+           return sendOtp(email,purpose);
 
         }
-        OtpData data = OtpStore.get(email);
+        OtpData data = OtpStore.get(key);
 
         if (data.lastSentAt.plusMinutes(3).isAfter(LocalDateTime.now())) {
             return new OtpResponse(false,"Resend allowed only after 3 minutes.");
@@ -152,23 +165,28 @@ public class OtpService {
 
     }
 
-    public boolean verifyOtp(String email ,String otp){
-        if (!OtpStore.containsKey(email)) return false;
-        OtpData data = OtpStore.get(email);
+    public boolean verifyOtp(String email,String purpose ,String otp){
+        if(!isValidPurpose(purpose)){
+            return false;
+        }
+        String key = email + "-" + purpose;
+        if (!OtpStore.containsKey(key)) return false;
+
+        OtpData data = OtpStore.get(key);
 
         if (LocalDateTime.now().isAfter(data.expireAt)) {
-            OtpStore.remove(email);
+            OtpStore.remove(key);
             return false;
         }
         if (data.attempts >= 5) {
-            OtpStore.remove(email);
+            OtpStore.remove(key);
             return false;
         }
         if (!data.otp.equals(otp)) {
             data.attempts++;
                     return false;
                 }
-        OtpStore.remove(email);
+        OtpStore.remove(key);
         return true;
     }
 }

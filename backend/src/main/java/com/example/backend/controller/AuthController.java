@@ -84,14 +84,14 @@ public class AuthController {
 
     @PostMapping("/verify")
     public ResponseEntity<OtpResponse> verifyOtp(@RequestBody OtpRequest req){
-        boolean isvalid = otpService.verifyOtp(req.getEmail(),req.getOtp());
-        if(!isvalid){
-
-            return ResponseEntity.badRequest().body(new OtpResponse(false, "Invalid Or Expired Otp"));
-        }
-        else {
+        boolean isvalid = otpService.verifyOtp(req.getEmail(),req.getOtp(),req.getPurpose());
+        if(isvalid){
             otpService.markOtpVerified(req.getEmail(), req.getPurpose());
             return ResponseEntity.ok(new OtpResponse(true, "Otp Verified Successfully"));
+        }
+        else {
+            return ResponseEntity.badRequest().body(new OtpResponse(false, "Invalid Or Expired Otp"));
+
         }
     }
     @PostMapping("/google")

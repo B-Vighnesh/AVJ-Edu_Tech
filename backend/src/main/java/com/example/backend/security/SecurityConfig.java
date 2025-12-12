@@ -1,7 +1,6 @@
 package com.example.backend.security;
 
 import com.example.backend.jwt.JwtAuthenticationFilter;
-import com.example.backend.jwt.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,21 +23,17 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(JwtService jwtService, UserDetailsService userDetailsService) {
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-    }
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   AuthenticationProvider authenticationProvider,
-                                                   JwtAuthenticationFilter jwtAuthFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            AuthenticationProvider authenticationProvider,
+            JwtAuthenticationFilter jwtAuthFilter  // <-- Spring injects @Component bean
+    ) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
@@ -49,13 +44,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(jwtService, userDetailsService);
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService uds) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(uds);
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
@@ -66,7 +56,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
-        return new ProviderManager(List.of(authenticationProvider));
+    public AuthenticationManager authenticationManager(AuthenticationProvider provider) {
+        return new ProviderManager(List.of(provider));
     }
 }

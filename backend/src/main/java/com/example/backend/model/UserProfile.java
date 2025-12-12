@@ -1,7 +1,9 @@
 package com.example.backend.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+@Data
 @Entity
 @Table(name = "user_profile")
 public class UserProfile {
@@ -15,6 +17,8 @@ public class UserProfile {
     private User user;
 
     private String jobTitle;
+
+    private String phoneNo;
 
     @Enumerated(EnumType.STRING)
     private ExperienceLevel experienceLevel;

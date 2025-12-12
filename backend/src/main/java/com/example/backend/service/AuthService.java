@@ -26,13 +26,16 @@ public class AuthService {
 
 
     @Autowired
-    public AuthService(UserRepository userRepository, UserRepository userRepository1, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService)
-    {
+    public AuthService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AuthenticationManager authenticationManager,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
+
 
     public AuthResponse register(RegisterRequest registerRequest)
     {
@@ -56,7 +59,7 @@ public class AuthService {
                         registerRequest.getPassword()
                 )
         );
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(saved.getId(), saved.getEmail());
         otpService.clearOtpVerification(registerRequest.getEmail(), "REGISTER");
 
         return new AuthResponse(true,"Registartion Succcess",token,saved.getId(),saved.getRole().name());
@@ -87,7 +90,7 @@ public class AuthService {
                 )
         );
 
-        String token = jwtService.generateToken(user.getEmail());
+        String token = jwtService.generateToken(user.getId(), user.getEmail());
 
         return new AuthResponse(
                 true,
