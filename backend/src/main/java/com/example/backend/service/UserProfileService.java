@@ -5,14 +5,14 @@ import com.example.backend.model.User;
 import com.example.backend.model.UserProfile;
 import com.example.backend.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
-
-
+    @Cacheable(value = "userProfile", key = "#userId")
     public ProfileResponse getProfile(Long userId){
         UserProfile profile= userProfileRepository.findByUserId(userId);
 
