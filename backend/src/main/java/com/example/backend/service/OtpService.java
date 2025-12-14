@@ -19,6 +19,27 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class OtpService {
     private final Map<String, Boolean> verifiedMap = new ConcurrentHashMap<>();
+    private final JavaMailSender mailSender;
+    private final UserRepository userRepository;
+    private final Map<String,OtpData> OtpStore =new ConcurrentHashMap<>();
+    static class OtpData{
+        String otp;
+        LocalDateTime expireAt;
+        LocalDateTime lastSentAt;
+        int attempts;
+        OtpData(String otp ,LocalDateTime expireAt,LocalDateTime lastSentAt){
+            this.otp=otp;
+            this.expireAt=expireAt;
+            this.lastSentAt=lastSentAt;
+            this.attempts=0;
+
+        }
+    }
+    @Autowired
+    public OtpService(JavaMailSender mailSender, UserRepository userRepository){
+        this.mailSender=mailSender;
+        this.userRepository = userRepository;
+    }
 
     public boolean isOtpVerified(String email, String purpose) {
         return verifiedMap.getOrDefault(email + "-" + purpose, false);
@@ -36,32 +57,6 @@ public class OtpService {
         return purpose.equalsIgnoreCase("REGISTER")
                 || purpose.equalsIgnoreCase("FORGOT_PASSWORD");
     }
-
-    static class OtpData{
-        String otp;
-        LocalDateTime expireAt;
-        LocalDateTime lastSentAt;
-        int attempts;
-        OtpData(String otp ,LocalDateTime expireAt,LocalDateTime lastSentAt){
-            this.otp=otp;
-            this.expireAt=expireAt;
-            this.lastSentAt=lastSentAt;
-            this.attempts=0;
-
-        }
-
-
-    }
-
-    private final JavaMailSender mailSender;
-    private final Map<String,OtpData> OtpStore =new ConcurrentHashMap<>();
-
-    @Autowired
-    public OtpService(JavaMailSender mailSender){
-        this.mailSender=mailSender;
-    }
-    @Autowired
-    private UserRepository userRepository;
 
     public OtpResponse sendOtp(String email, String purpose){
 
