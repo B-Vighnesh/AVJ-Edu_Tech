@@ -16,10 +16,9 @@ public class UserProfileController {
 
     private final UserProfileService userProfileService;
 
-    @GetMapping("/me")
+    @GetMapping()
     public ResponseEntity<ProfileResponse> getProfile() {
 
-        // Extract userId from JWT subject
         String userIdString = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -34,5 +33,14 @@ public class UserProfileController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+    }
+
+    @PostMapping()
+    public ResponseEntity<ProfileResponse> updateProfile(){
+        ProfileResponse re=new ProfileResponse();
+        re.setBio("meow");
+
+        return ResponseEntity.status(HttpStatus.OK).body(re);
+
     }
 }

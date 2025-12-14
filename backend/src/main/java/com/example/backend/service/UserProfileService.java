@@ -4,6 +4,7 @@ import com.example.backend.DTO.ProfileResponse;
 import com.example.backend.model.User;
 import com.example.backend.model.UserProfile;
 import com.example.backend.repository.UserProfileRepository;
+import com.example.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -12,25 +13,24 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
+    private final UserRepository userRepository;
     @Cacheable(value = "userProfile", key = "#userId")
     public ProfileResponse getProfile(Long userId){
         UserProfile profile= userProfileRepository.findByUserId(userId);
 
+        User user =profile.getUser();
         if(profile!=null){
             return new ProfileResponse(
                     profile.getId(),
-                    "akashshenvi93@gmail.com",
-                    "Akash",
+                    user.getEmail(),
+                    user.getFullName(),
                     profile.getJobTitle(),
-                    "Biggner",
+                    "asd",
                     profile.getBio(),
                     profile.getPhoneNo(),
                     profile.getCompany(),
                     true,
                     "User Profile Found"
-
-
-
             );
         }
         else{
@@ -47,8 +47,5 @@ public class UserProfileService {
                     "Profile not found"
             );
         }
-
     }
-
-
 }
