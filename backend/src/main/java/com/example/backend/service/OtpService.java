@@ -185,7 +185,8 @@ public class OtpService {
         if (!data.otp.equals(otp)) {
             data.attempts++;
                     return false;
-                }
+        }
+        markOtpVerified(email, purpose);
         OtpStore.remove(key);
         return true;
     }
