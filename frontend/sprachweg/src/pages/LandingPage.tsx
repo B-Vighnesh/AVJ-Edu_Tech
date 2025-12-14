@@ -1,374 +1,265 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-    GraduationCap,
-    Users,
-    Award,
-    BookOpen,
-    Video,
-    MessageCircle,
-    TrendingUp,
-    CheckCircle,
-    ArrowRight,
-    Star,
-} from 'lucide-react';
-import Button from '../components/ui/Button';
-import Card from '../components/ui/Card';
+import React from "react";
+import { motion } from "framer-motion";
 
-const LandingPage: React.FC = () => {
-    const stats = [
-        { value: '150+', label: 'Active Students' },
-        { value: '8', label: 'Expert Trainers' },
-        { value: '6', label: 'Level Programs' },
-        { value: '95%', label: 'Success Rate' },
-    ];
+// Icons
+const GlobeIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#D0AA53]"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg>);
+const PlayIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>);
+const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>);
+const StarIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#D0AA53" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>);
 
-    const features = [
-        {
-            icon: <Video className="w-6 h-6" />,
-            title: 'Live Classes',
-            description: 'Interactive sessions with native German speakers',
-        },
-        {
-            icon: <BookOpen className="w-6 h-6" />,
-            title: 'Structured Curriculum',
-            description: 'A1 to C2 levels with clear progression paths',
-        },
-        {
-            icon: <Award className="w-6 h-6" />,
-            title: 'Certificates',
-            description: 'Recognized certifications upon completion',
-        },
-        {
-            icon: <MessageCircle className="w-6 h-6" />,
-            title: 'Placement Support',
-            description: 'Career guidance for German-speaking markets',
-        },
-        {
-            icon: <Users className="w-6 h-6" />,
-            title: 'Community',
-            description: 'Connect with fellow learners worldwide',
-        },
-        {
-            icon: <TrendingUp className="w-6 h-6" />,
-            title: 'AI Practice',
-            description: 'Smart exercises tailored to your level',
-        },
-    ];
+const HeroSection = () => (
+    <section className="relative bg-[#FAFAFA] dark:bg-gray-900 pb-20 pt-10 overflow-hidden">
+        {/* Background glow effects could be added here */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Text Content */}
+            <div className="z-10">
+                <div className="flex items-center gap-2 mb-6">
+                    <span className="w-2 h-2 rounded-full bg-[#D0AA53]"></span>
+                    <span className="text-[#A08040] font-medium text-sm tracking-wide uppercase">New: Summer 2024 Batches Now Open</span>
+                </div>
+                <h1 className="text-5xl md:text-6xl font-serif font-medium text-[var(--sovir-navy)] dark:text-white leading-[1.1] mb-6">
+                    SoVir Akademie<br />
+                    <span className="text-[#D0AA53]">Skills, Languages</span><br />
+                    & Global Careers
+                </h1>
+                <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-lg leading-relaxed">
+                    Master German from A1 to B2 with live interactive classes, prepare for Goethe exams, and unlock career opportunities in Germany through our proven pathways.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                    <button className="bg-[#D0AA53] hover:bg-[#b89542] text-[#0A1A2F] px-8 py-4 rounded-md font-bold text-sm transition-transform hover:-translate-y-0.5 flex items-center gap-2">
+                        Start A1 Trial <span>→</span>
+                    </button>
+                    <button className="bg-transparent border border-gray-300 text-[var(--sovir-navy)] px-6 py-4 rounded-md font-bold text-sm hover:border-[#D0AA53] hover:text-[#D0AA53] transition-colors flex items-center gap-2">
+                        <PlayIcon /> Book Free Consult
+                    </button>
+                </div>
+                {/* Review snippet */}
+                <div className="mt-8 flex items-center gap-4">
+                    <div className="flex -space-x-3">
+                        {[1, 2, 3, 4].map(i => <div key={i} className="w-10 h-10 rounded-full bg-gray-300 border-2 border-white"></div>)}
+                    </div>
+                    <div>
+                        <div className="flex gap-1 mb-1">{[1, 2, 3, 4, 5].map(i => <StarIcon key={i} />)} <span className="text-xs font-bold font-sans ml-1 text-[var(--sovir-navy)]">4.9</span></div>
+                        <div className="text-xs text-gray-500">from 2500+ reviews</div>
+                    </div>
+                </div>
+            </div>
 
+            {/* Hero Image / Composition */}
+            <div className="relative">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                    <div className="aspect-[4/3] bg-gray-200">
+                        {/* Placeholder for Hero Image */}
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1600" alt="Students" className="w-full h-full object-cover" />
+                    </div>
+
+                    {/* Floating Cards */}
+                    <div className="absolute top-10 left-[-20px] bg-white p-4 rounded-xl shadow-lg flex items-center gap-3 animate-bounce-slow">
+                        <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">✓</div>
+                        <div>
+                            <div className="font-bold text-sm">Goethe Certified</div>
+                            <div className="text-xs text-gray-500">Exam Prep Program</div>
+                        </div>
+                    </div>
+
+                    <div className="absolute bottom-20 right-[-20px] bg-white p-4 rounded-xl shadow-lg flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600"><GlobeIcon /></div>
+                        <div>
+                            <div className="font-bold text-sm">150+</div>
+                            <div className="text-xs text-gray-500">Placements in Germany</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
+const StatsSection = () => (
+    <section className="bg-[#0A1A2F] py-12 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-800">
+            <div>
+                <div className="text-3xl md:text-4xl font-serif text-white mb-2">5,000+</div>
+                <div className="text-xs text-gray-400 uppercase tracking-widest">Students Enrolled</div>
+            </div>
+            <div>
+                <div className="text-3xl md:text-4xl font-serif text-white mb-2">98%</div>
+                <div className="text-xs text-gray-400 uppercase tracking-widest">Success Rate</div>
+            </div>
+            <div>
+                <div className="text-3xl md:text-4xl font-serif text-white mb-2">15+</div>
+                <div className="text-xs text-gray-400 uppercase tracking-widest">Countries</div>
+            </div>
+            <div>
+                <div className="text-3xl md:text-4xl font-serif text-white mb-2">4.9</div>
+                <div className="text-xs text-gray-400 uppercase tracking-widest">Student Rating</div>
+            </div>
+        </div>
+    </section>
+);
+
+const PartnersSection = () => (
+    <section className="py-12 bg-white text-center">
+        <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8">Recognized & Partnered With</div>
+        <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            {["Goethe Institut", "TestDaF", "TELC", "Make it in Germany", "DAAD", "IHK"].map(p => (
+                <span key={p} className="text-xl font-serif font-bold text-gray-600">{p}</span>
+            ))}
+        </div>
+    </section>
+);
+
+const PricingCard = ({ title, subtitle, duration, price, crossPrice, features, isPopular }: any) => (
+    <div className={`relative bg-white border ${isPopular ? 'border-[#D0AA53]' : 'border-gray-200'} rounded-xl p-6 shadow-sm hover:shadow-xl transition-all`}>
+        {isPopular && <span className="absolute top-4 right-4 bg-[#E07A5F] text-white text-[10px] font-bold px-2 py-1 rounded">Popular</span>}
+        <div className="flex items-center gap-2 mb-2">
+            <span className="text-[#D0AA53] font-bold">★ 4.9</span>
+            <span className="text-xs text-gray-400">(1,250 students)</span>
+        </div>
+        <h3 className="text-xl font-bold text-[var(--sovir-navy)]">{title}</h3>
+        <div className="text-sm text-gray-500 mb-4">{subtitle}</div>
+
+        <div className="flex items-center gap-4 text-xs text-gray-500 mb-6 border-b pb-4 border-dashed">
+            <div className="flex items-center gap-1">⏱ {duration}</div>
+            <div className="flex items-center gap-1">📅 Jan 15, 2024</div>
+        </div>
+
+        <ul className="space-y-3 mb-8">
+            {features.map((f: string, i: number) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <span className="text-[#D0AA53] mt-0.5">•</span> {f}
+                </li>
+            ))}
+        </ul>
+
+        <div className="flex items-center justify-between mt-auto">
+            <div>
+                <span className="text-2xl font-serif font-bold text-[var(--sovir-navy)]">{price}</span>
+                <span className="text-sm text-gray-400 line-through ml-2">{crossPrice}</span>
+            </div>
+            <button className="bg-[#D0AA53] hover:bg-[#b89542] text-[#0A1A2F] px-4 py-2 rounded text-sm font-bold">Enroll →</button>
+        </div>
+    </div>
+);
+
+const CoursesSection = () => (
+    <section className="py-20 bg-[#FAFAFA]">
+        <div className="max-w-7xl mx-auto px-4">
+            <div className="mb-12">
+                <div className="text-[#D0AA53] text-sm font-bold uppercase mb-2">Our Programs</div>
+                <h2 className="text-4xl font-serif text-[var(--sovir-navy)]">Featured Courses</h2>
+                <p className="text-gray-500 mt-4 max-w-2xl">Choose from our expertly designed German language courses, from beginner A1 to advanced B2 levels.</p>
+                <div className="flex gap-2 mt-6">
+                    {["All Courses", "Live Classes", "Hybrid", "Self-Paced"].map((f, i) => (
+                        <button key={f} className={`px-4 py-1.5 rounded-full text-xs font-bold border ${i === 0 ? 'bg-[#0A1A2F] text-white border-[#0A1A2F]' : 'bg-white text-gray-600 border-gray-200'}`}>{f}</button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <PricingCard
+                    title="German A1 Complete"
+                    subtitle="Beginner's Journey"
+                    duration="8 weeks"
+                    price="€299"
+                    crossPrice="€399"
+                    features={["Live interactive sessions", "1-on-1 speaking practice"]}
+                />
+                <PricingCard
+                    title="German A2 Intensive"
+                    subtitle="Build Fluency"
+                    duration="10 weeks"
+                    price="€349"
+                    crossPrice="€449"
+                    isPopular
+                    features={["Live + recorded content", "Weekly assessments"]}
+                />
+                <PricingCard
+                    title="German B1 Professional"
+                    subtitle="Workplace Ready"
+                    duration="12 weeks"
+                    price="€449"
+                    crossPrice="€549"
+                    isPopular
+                    features={["Business German module", "Interview preparation"]}
+                />
+                <PricingCard
+                    title="German B2 Mastery"
+                    subtitle="Near-Native Level"
+                    duration="14 weeks"
+                    price="€549"
+                    crossPrice="€699"
+                    features={["Advanced grammar deep-dive", "Academic German"]}
+                />
+            </div>
+
+            <div className="mt-12 text-center">
+                <button className="bg-white border border-gray-300 px-6 py-3 rounded-full text-sm font-bold hover:bg-gray-50">View All Courses →</button>
+            </div>
+        </div>
+    </section>
+);
+
+const TestimonialsSection = () => (
+    <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+            <div className="text-[#D0AA53] text-sm font-bold uppercase mb-2">Success Stories</div>
+            <h2 className="text-4xl font-serif text-[var(--sovir-navy)] mb-4">Hear From Our Students</h2>
+            <p className="text-gray-500 max-w-2xl mx-auto mb-16">Join thousands of successful learners who have transformed their careers.</p>
+
+            <div className="flex flex-col lg:flex-row gap-12 items-center">
+                {/* Active Testimonial */}
+                <div className="flex-1 bg-[#FFFBF4] p-12 rounded-2xl text-left relative">
+                    <div className="text-6xl text-[#EAD098] font-serif absolute top-8 left-8">“</div>
+                    <p className="text-lg text-gray-700 font-medium leading-relaxed relative z-10 mt-6 mb-8">
+                        'SoVir Akademie transformed my career. From zero German to B2 in 10 months, and now I'm working as a nurse in Berlin. The live classes were engaging, and the career support was exceptional.'
+                    </p>
+
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-gray-300">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" className="w-full h-full rounded-full object-cover" />
+                        </div>
+                        <div>
+                            <div className="font-bold text-[var(--sovir-navy)]">Priya Sharma</div>
+                            <div className="text-xs text-[#D0AA53]">Nursing Professional</div>
+                            <div className="flex text-[#D0AA53] text-xs mt-1">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Video/Image Grid */}
+                <div className="flex-1">
+                    <div className="bg-white border rounded-xl p-6 text-left mb-6 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="text-[#D0AA53] text-[10px] font-bold uppercase mb-2">Program Completed</div>
+                        <div className="font-serif font-bold text-lg">German B2 + Nursing Pathway</div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="aspect-square rounded-xl overflow-hidden border-4 border-[#D0AA53] shadow-lg">
+                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover" />
+                        </div>
+                        <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400" className="w-full h-full object-cover opacity-80" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+);
+
+export default function LandingPage() {
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-            {/* Header */}
-            <motion.header
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800"
-            >
-                <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-xl flex items-center justify-center">
-                                <span className="text-white font-black text-lg">SW</span>
-                            </div>
-                            <span className="text-xl font-bold text-gray-900 dark:text-white">SprachWeg</span>
-                        </div>
-
-                        <div className="hidden md:flex items-center gap-8">
-                            <a href="#features" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Features
-                            </a>
-                            <a href="#levels" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Levels
-                            </a>
-                            <a href="#testimonials" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Testimonials
-                            </a>
-                            <a href="#pricing" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 transition-colors">
-                                Pricing
-                            </a>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            <Link to="/login">
-                                <Button variant="ghost">Log In</Button>
-                            </Link>
-                            <Link to="/register">
-                                <Button>Start Free</Button>
-                            </Link>
-                        </div>
-                    </div>
-                </nav>
-            </motion.header>
-
-            {/* Hero Section */}
-            <section className="relative overflow-hidden py-20 lg:py-32">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <div className="inline-flex items-center gap-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                                <Star className="w-4 h-4 fill-current" />
-                                <span>150+ Students Learning German</span>
-                            </div>
-
-                            <h1 className="text-5xl lg:text-6xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
-                                Master German with{' '}
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
-                                    SprachWeg
-                                </span>
-                            </h1>
-
-                            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-                                Your comprehensive path to German fluency. Live classes, expert trainers, and a proven curriculum from A1 to C2.
-                            </p>
-
-                            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                                <Link to="/register">
-                                    <Button size="lg" className="w-full sm:w-auto">
-                                        Start Learning Free
-                                        <ArrowRight className="w-5 h-5 ml-2" />
-                                    </Button>
-                                </Link>
-                                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                                    <Video className="w-5 h-5 mr-2" />
-                                    Watch Demo
-                                </Button>
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <div className="flex -space-x-3">
-                                    {[1, 2, 3, 4].map((i) => (
-                                        <div
-                                            key={i}
-                                            className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-pink-400 border-2 border-white dark:border-gray-900 flex items-center justify-center text-white font-semibold"
-                                        >
-                                            {String.fromCharCode(64 + i)}
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="text-sm">
-                                    <div className="flex items-center gap-1 text-orange-500">
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <Star key={i} className="w-4 h-4 fill-current" />
-                                        ))}
-                                    </div>
-                                    <p className="text-gray-600 dark:text-gray-400">
-                                        Trusted by <strong>150+ students</strong>
-                                    </p>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="relative"
-                        >
-                            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                                <img
-                                    src="/api/placeholder/600/700"
-                                    alt="Student learning German"
-                                    className="w-full h-auto"
-                                />
-
-                                {/* Floating Cards */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.8, duration: 0.5 }}
-                                    className="absolute top-8 left-8 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                                            <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-semibold text-gray-900 dark:text-white">Live Class</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">Starting in 30 min</div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 1, duration: 0.5 }}
-                                    className="absolute bottom-8 right-8 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                                            <GraduationCap className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-semibold text-gray-900 dark:text-white">B1 Certified</div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400">Achievement Unlocked!</div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
+        <div>
+            <HeroSection />
+            <StatsSection />
+            <PartnersSection />
+            <CoursesSection />
+            <TestimonialsSection />
+            <section className="py-20 text-center">
+                <h2 className="text-2xl font-serif mb-6">Ready to start your journey?</h2>
+                <button className="bg-[#D0AA53] text-[#0A1A2F] px-8 py-3 rounded font-bold hover:bg-[#b89542]">Get Started Now</button>
             </section>
-
-            {/* Stats Section */}
-            <section className="py-12 bg-gradient-to-r from-orange-500 via-pink-500 to-orange-500 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-                        {stats.map((stat, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                className="text-center"
-                            >
-                                <div className="text-4xl lg:text-5xl font-black text-white dark:text-orange-400 mb-2">
-                                    {stat.value}
-                                </div>
-                                <div className="text-white/90 dark:text-gray-400 font-medium">{stat.label}</div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section id="features" className="py-20 lg:py-32">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
-                        <h2 className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-4">
-                            Everything You Need to{' '}
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">
-                                Master German
-                            </span>
-                        </h2>
-                        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Our comprehensive platform provides all the tools for your German learning journey
-                        </p>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {features.map((feature, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                            >
-                                <Card hover className="h-full">
-                                    <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-orange-600 dark:text-orange-400 mb-4">
-                                        {feature.icon}
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                                        {feature.title}
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-400">{feature.description}</p>
-                                </Card>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* CTA Section */}
-            <section className="py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="relative rounded-3xl bg-gradient-to-r from-orange-500 via-pink-500 to-orange-500 p-12 lg:p-16 text-center overflow-hidden"
-                    >
-                        <div className="relative z-10">
-                            <h2 className="text-4xl lg:text-5xl font-black text-white mb-6">
-                                Start Your German Journey Today
-                            </h2>
-                            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                                Join 150+ students already learning with SprachWeg. First week free, no credit card required.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Link to="/register">
-                                    <Button size="lg" variant="secondary" className="!bg-white !text-orange-600 hover:!bg-gray-100">
-                                        Get Started Free
-                                        <ArrowRight className="w-5 h-5 ml-2" />
-                                    </Button>
-                                </Link>
-                                <Button size="lg" variant="outline" className="!border-white !text-white hover:!bg-white/10">
-                                    Learn More
-                                </Button>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="bg-gray-900 dark:bg-black text-white py-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid md:grid-cols-4 gap-8 mb-8">
-                        <div>
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-pink-500 rounded-xl flex items-center justify-center">
-                                    <span className="text-white font-black">SW</span>
-                                </div>
-                                <span className="text-xl font-bold">SprachWeg</span>
-                            </div>
-                            <p className="text-gray-400 text-sm">
-                                Your comprehensive path to German fluency with expert-led courses and live classes.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 className="font-bold mb-4">Platform</h3>
-                            <ul className="space-y-2 text-gray-400 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Courses</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Certificates</a></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 className="font-bold mb-4">Company</h3>
-                            <ul className="space-y-2 text-gray-400 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 className="font-bold mb-4">Legal</h3>
-                            <ul className="space-y-2 text-gray-400 text-sm">
-                                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                                <li><a href="#" className="hover:text-white transition-colors">Cookie Policy</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
-                        <p>&copy; 2025 SprachWeg. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
-};
-
-export default LandingPage;
+}
