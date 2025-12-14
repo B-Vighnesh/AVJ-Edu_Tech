@@ -14,9 +14,10 @@ interface AuthContextType {
     user: User | null;
     loading: boolean;
     login: (email: string, password: string) => Promise<void>;
-    register: (name: string, email: string, phoneNumber: string, password: string, germanLevel?: string) => Promise<void>;
-    verifyOtp: (email: string, otp: string) => Promise<void>;
-    resendOtp: (email: string) => Promise<void>;
+    register: (name: string, email: string, password: string) => Promise<void>;
+    sendOtp: (email: string, purpose: string) => Promise<void>;
+    verifyOtp: (email: string, otp: string, purpose: string) => Promise<void>;
+    resetPassword: (email: string, newPassword: string) => Promise<void>;
     logout: () => void;
     refreshUser: () => Promise<void>;
 }
@@ -42,9 +43,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const refreshUser = async () => {
         try {
-            const response = await api.get('/auth/me');
-            setUser(response.data);
-            localStorage.setItem('user', JSON.stringify(response.data));
+            const response = await api.get('/profile');
+            // Map ProfileResponse (fullName) to User (name)
+            const userData: User = {
+                id: response.data.id.toString(),
+                name: response.data.fullName,
+                email: response.data.email,
+                phoneNumber: response.data.phoneNo,
+                role: 'Student', // Defaulting role as it is missing from ProfileResponse
+                isEmailVerified: true // Assumption since they have a profile
+            };
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
         } catch (error) {
             console.error('Failed to refresh user:', error);
             logout();
@@ -56,40 +66,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const register = async (
         name: string,
         email: string,
-        phoneNumber: string,
-        password: string,
-        germanLevel?: string
+        password: string
     ) => {
         const response = await api.post('/auth/register', {
-            name,
+            fullName: name, // Backend expects fullName
             email,
-            phoneNumber,
             password,
-            germanLevel,
         });
-        return response.data;
+
+        // Backend returns token immediately on register
+        const { token, ...userData } = response.data;
+        if (token) {
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(userData));
+            setUser(userData as User);
+            await refreshUser(); // Get full profile
+        }
     };
 
-    const verifyOtp = async (email: string, otp: string) => {
-        const response = await api.post('/auth/verify-otp', { email, otp });
-        const { token, user: userData } = response.data;
-
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+    const sendOtp = async (email: string, purpose: string) => {
+        await api.post('/auth/send', { email, purpose });
     };
 
-    const resendOtp = async (email: string) => {
-        await api.post('/auth/resend-otp', { email });
+    const verifyOtp = async (email: string, otp: string, purpose: string) => {
+        await api.post('/auth/verify', { email, otp, purpose });
+    };
+
+    const resetPassword = async (email: string, newPassword: string) => {
+        await api.post('/auth/reset-password', { email, newPassword });
     };
 
     const login = async (email: string, password: string) => {
         const response = await api.post('/auth/login', { email, password });
-        const { token, user: userData } = response.data;
-
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+        const { token } = response.data;
+        if (token) {
+            localStorage.setItem('token', token);
+            await refreshUser();
+        }
     };
 
     const logout = () => {
@@ -105,8 +118,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 loading,
                 login,
                 register,
+                sendOtp,
                 verifyOtp,
-                resendOtp,
+                resetPassword,
                 logout,
                 refreshUser,
             }}

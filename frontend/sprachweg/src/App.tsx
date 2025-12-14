@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 
 // Protected Route Component
@@ -72,6 +73,14 @@ const App: React.FC = () => {
               element={
                 <PublicRoute>
                   <RegisterPage />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <PublicRoute>
+                  <ForgotPasswordPage />
                 </PublicRoute>
               }
             />
